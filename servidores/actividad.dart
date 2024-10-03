@@ -1,8 +1,7 @@
-
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:http/http.dart' as http;
 
-class User{
+class User {
   int? id;
   String? name;
   String? username;
@@ -11,59 +10,52 @@ class User{
   String? phone;
   String? website;
   Company? company;
-  
-  
-  User(String jsonString){
-    Map<String, dynamic> map = jsonDecode(jsonString);
+
+  User(Map map) {
     this.id = map['id'];
     this.name = map['name'];
     this.username = map['username'];
     this.email = map['email'];
-    Map address = map['address'];
-    this.address = new Address(address);
+    this.address = new Address(map['address']);
     this.phone = map['phone'];
     this.website = map['website'];
-    Map company = map['company'];
-    this.company = new Company(company);
-
-    
-
+    this.company = new Company(map['company']);
   }
 }
 
-class Address{
+class Address {
   String? street;
   String? suite;
   String? city;
-  int? zipcode;
+  String? zipcode;
   Geo? geo;
-  
-  Address(Map map){
+
+  Address(Map map) {
     this.street = map['street'];
     this.suite = map['suite'];
     this.city = map['city'];
     this.zipcode = map['zipcode'];
     this.geo = new Geo(map['geo']);
-    
-  }  
+  }
 }
 
-class Company{
+class Company {
   String? name;
   String? catchPhrase;
   String? bs;
-  
-  Company(Map map){
+
+  Company(Map map) {
     this.name = map['name'];
     this.catchPhrase = map['catchPhrase'];
     this.bs = map['bs'];
   }
 }
-class Geo{
+
+class Geo {
   String? lat;
   String? lng;
-  
-  Geo(Map map){
+
+  Geo(Map map) {
     this.lat = map['lat'];
     this.lng = map['lng'];
   }
@@ -71,14 +63,13 @@ class Geo{
 
 void main() async {
   int id = 2;
- 
-  var url = Uri.http('jsonplaceholder.typicode.com', 'users/${id}');
-  
-  var response = await http.get(url);
-  
 
-  if(response.statusCode == 200){
-     User user = new User(response.body);
+  var url = Uri.https('jsonplaceholder.typicode.com', 'users/${id}');
+  var response = await http.get(url);
+
+  if (response.statusCode == 200) {
+    Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+    User user = User(jsonResponse);
     print(user.name);
   }
 }
